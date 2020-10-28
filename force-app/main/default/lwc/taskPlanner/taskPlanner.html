@@ -1,0 +1,202 @@
+<!-- 
+<template>
+    <lightning-layout pull-to-boundary="small">
+        <lightning-layout-item padding="horizontal-small" vertical-align="center"
+        horizontal-align="spread" >
+
+            Date : <lightning-input    type="date" 
+                                placeholder="Todays Date" 
+                                label="Date"
+                                variant="label-hidden" 
+                                required value={currentDate}
+                                onchange={dateChangeHandler}>
+                        </lightning-input>
+                        
+        </lightning-layout-item>
+        <lightning-layout-item padding="horizontal-small">
+            <lightning-button
+                variant="brand"
+                label="New Task"
+            >
+            </lightning-button>
+        </lightning-layout-item>
+            
+    </lightning-layout>
+</template>
+ -->
+<template>
+    <lightning-card  style="width: 100%;">
+    <lightning-layout >
+        <!-- Top -->
+        <lightning-layout-item size="12">
+          <lightning-card title="My Tasks">
+            <!--  -->
+            <lightning-layout vertical-align="center">
+        <p class="slds-var-p-horizontal_small slds-p-top_medium  slds-align--absolute-center">
+
+            <lightning-layout-item padding="horizontal-small">
+                <span style="color:blue;font-size:16px"><b>Date : </b></span>
+                
+            </lightning-layout-item>
+            <lightning-layout-item >
+                <lightning-input    type="date" 
+                                    placeholder="Todays Date" 
+                                    label="Date"
+                                    variant="label-hidden" 
+                                    required value={currentDate}
+                                    onchange={dateChangeHandler}>
+                </lightning-input>
+            </lightning-layout-item>
+        </p>
+        </lightning-layout>
+            <!--  -->
+            <lightning-button  variant="brand" 
+                              label="Task Editor" 
+                              title="Task Editor" 
+                              slot ="actions" 
+                              onclick={taskEditorHandler}>
+            </lightning-button>
+            <!-- <p class="slds-var-p-horizontal_small slds-align--absolute-center">
+              <span style="color:blue;font-size:16px"><b>My Tasks</b></span>
+            </p> -->
+          </lightning-card>
+        </lightning-layout-item>       
+      </lightning-layout>
+
+<!--ADD NEW TASK SECTION  -->
+
+    <div slot="footer" >
+    <lightning-accordion 
+                         onsectiontoggle={handleToggleSection}
+                         active-section-name={accordianSection}
+                         allow-multiple-sections-open>
+        <lightning-accordion-section name="AddNewTask" label="Add New Task" class="slds-align--absolute-center">
+           
+    <p class="slds-box ">
+    <!-- INPUT FIELDS -->
+    <lightning-layout pull-to-boundary="small" vertical-align="center">
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow">
+            <span style="font-size:16px"><b>Task Name : </b></span>
+        </lightning-layout-item>
+        <lightning-layout-item  flexibility="grow">
+            <lightning-input
+                type="text"
+                placeholder="Enter new task"
+                variant="label-hidden"
+                label="New Task"
+                value={taskName}
+                onchange={inputNameHandler}
+                required
+            >
+            </lightning-input>
+        </lightning-layout-item>
+    </lightning-layout>
+    <lightning-layout pull-to-boundary="small"  vertical-align="center" class="slds-p-top_medium">
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow">
+            <span style="font-size:16px"><b>Date: </b></span>
+        </lightning-layout-item>
+        <!-- Input Field to input date for the task -->
+        <lightning-layout-item  flexibility="grow">
+            <lightning-input
+                type="date"
+                placeholder="Enter date"
+                variant="label-hidden"
+                label="Date"
+                onchange={inputDateHandler}
+                value={taskDate}
+                required
+            >
+            </lightning-input>
+        </lightning-layout-item>
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow" class="slds-p-left_x-large">
+            <span style="font-size:16px"><b>Duration: </b></span>
+        </lightning-layout-item>
+         <!-- Input Field to input Duration for the task -->
+        <lightning-layout-item  flexibility="grow">
+            <lightning-input
+                type="number"
+                placeholder="Enter duration in hours"
+                variant="label-hidden"
+                label="Duration"
+                min="0.1"
+                max="24.0"
+                step=".1"
+                value={taskDuration}
+                onchange={inputDurationHandler}
+  
+            >
+            </lightning-input>
+        </lightning-layout-item>
+    </lightning-layout>
+    <lightning-layout pull-to-boundary="small"  vertical-align="center" class="slds-p-top_medium">
+        <lightning-layout-item  padding="horizontal-small" flexibility="no grow">
+            <span style="font-size:16px"><b>Remarks </b></span>
+        </lightning-layout-item>
+         <!-- Input Field to input Remarks for the task -->
+        <lightning-layout-item padding="horizontal-small" flexibility="grow">
+            <lightning-input
+                type="text"
+                placeholder="Enter the Remarks"
+                variant="label-hidden"
+                label="Remarks"
+                value={taskRemarks}
+                onchange={inputRemarksHandler}
+                required
+            >
+            </lightning-input>
+        </lightning-layout-item>
+    </lightning-layout>
+    <lightning-layout pull-to-boundary="small"  class="slds-p-top_medium slds-align--absolute-center">
+         <!-- Lighting button to create task record on click of btn -->
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow">
+            <lightning-button   variant="brand" 
+                                label="Add" 
+                                onclick={createTaskRecord}>
+            </lightning-button>  
+        </lightning-layout-item>
+         <!-- Lighting button to empty input fields of task record on click of btn -->
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow">
+            <lightning-button   variant="brand" 
+                                label="Reset" 
+                                onclick={resetTaskHandler}>
+            </lightning-button>  
+        </lightning-layout-item>        
+    </lightning-layout>
+</p>
+        </lightning-accordion-section>
+    </lightning-accordion>
+</div>
+       <div class="list-first"></div>	
+  
+<div class="list-first"></div>	
+<template if:true={showTasks} for:each={recordsOfGetSelectedDateTasks} for:item="taskData">
+    <!-- <li key={expenseData.id} > -->
+        <article class="list-first-grey" key={taskData.id}>
+            <div class="slds-grid">
+                <header class="slds-media slds-has-flexi-truncate">
+                <div class="slds-media__body">
+                <!-- <h2 class="slds-card__header-title">								 -->
+                <b><span class="slds-p-left_small" style="color:#135fac;font-size:16px">{taskData.Task_Name__c}</span></b>							
+                <!-- </h2> -->
+                </div>
+                <div class="slds-no-flex">
+                <!-- <button class="slds-button slds-button_neutral">New</button> -->
+                <b><span class="slds-p-right_large" style="color:black;font-size:15px">{taskData.Task_Duration__c} Hrs</span></b>
+                </div>
+                </header>
+            </div>
+            <div class="slds-p-left_small slds-p-bottom_xx-small" style="color:grey;font-size:14px">{taskData.Task_Remarks__c}</div>
+        </article>
+    <!-- </li> -->
+</template>
+<template if:false={showTasks}>
+    <div class="slds-scrollable_y">
+        <lightning-datatable key-field="Id" data={recordsOfGetSelectedDateTasks} 
+        onsave={handleSave} columns={columns} draft-values={draftValues} hide-checkbox-column show-row-number-column>
+        </lightning-datatable>
+    </div>
+</template>
+<div class="list-last"></div>
+
+    </lightning-card>
+</template>

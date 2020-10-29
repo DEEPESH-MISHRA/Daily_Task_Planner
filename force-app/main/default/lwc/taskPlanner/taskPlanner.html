@@ -1,29 +1,3 @@
-<!-- 
-<template>
-    <lightning-layout pull-to-boundary="small">
-        <lightning-layout-item padding="horizontal-small" vertical-align="center"
-        horizontal-align="spread" >
-
-            Date : <lightning-input    type="date" 
-                                placeholder="Todays Date" 
-                                label="Date"
-                                variant="label-hidden" 
-                                required value={currentDate}
-                                onchange={dateChangeHandler}>
-                        </lightning-input>
-                        
-        </lightning-layout-item>
-        <lightning-layout-item padding="horizontal-small">
-            <lightning-button
-                variant="brand"
-                label="New Task"
-            >
-            </lightning-button>
-        </lightning-layout-item>
-            
-    </lightning-layout>
-</template>
- -->
 <template>
     <lightning-card  style="width: 100%;">
     <lightning-layout >
@@ -64,7 +38,6 @@
       </lightning-layout>
 
 <!--ADD NEW TASK SECTION  -->
-
     <div slot="footer" >
     <lightning-accordion 
                          onsectiontoggle={handleToggleSection}
@@ -78,7 +51,7 @@
         <lightning-layout-item padding="horizontal-small"  flexibility="no grow">
             <span style="font-size:16px"><b>Task Name : </b></span>
         </lightning-layout-item>
-        <lightning-layout-item  flexibility="grow">
+        <lightning-layout-item  padding="horizontal-small" flexibility="grow">
             <lightning-input
                 type="text"
                 placeholder="Enter new task"
@@ -96,7 +69,7 @@
             <span style="font-size:16px"><b>Date: </b></span>
         </lightning-layout-item>
         <!-- Input Field to input date for the task -->
-        <lightning-layout-item  flexibility="grow">
+        <lightning-layout-item padding="horizontal-small" flexibility="grow">
             <lightning-input
                 type="date"
                 placeholder="Enter date"
@@ -108,19 +81,19 @@
             >
             </lightning-input>
         </lightning-layout-item>
-        <lightning-layout-item padding="horizontal-small"  flexibility="no grow" class="slds-p-left_x-large">
+        <lightning-layout-item padding="horizontal-small"  flexibility="no grow" class="slds-p-left_x-small">
             <span style="font-size:16px"><b>Duration: </b></span>
         </lightning-layout-item>
          <!-- Input Field to input Duration for the task -->
-        <lightning-layout-item  flexibility="grow">
+        <lightning-layout-item padding="horizontal-small"  flexibility="grow">
             <lightning-input
                 type="number"
                 placeholder="Enter duration in hours"
                 variant="label-hidden"
                 label="Duration"
-                min="0.1"
+                min="0.01"
                 max="24.0"
-                step=".1"
+                step=".01"
                 value={taskDuration}
                 onchange={inputDurationHandler}
   
@@ -130,7 +103,7 @@
     </lightning-layout>
     <lightning-layout pull-to-boundary="small"  vertical-align="center" class="slds-p-top_medium">
         <lightning-layout-item  padding="horizontal-small" flexibility="no grow">
-            <span style="font-size:16px"><b>Remarks </b></span>
+            <span style="font-size:16px"><b>Remarks: </b></span>
         </lightning-layout-item>
          <!-- Input Field to input Remarks for the task -->
         <lightning-layout-item padding="horizontal-small" flexibility="grow">
@@ -169,9 +142,13 @@
        <div class="list-first"></div>	
   
 <div class="list-first"></div>	
-<template if:true={showTasks} for:each={recordsOfGetSelectedDateTasks} for:item="taskData">
+<!-- RECORDS DISPLAY -->
+<lightning-layout>
+    <lightning-layout-item padding="around-small" size="12">
+<ul class="slds-has-dividers_around-space" >
+<template if:true={showTasks} for:each={recordsOfGetSelectedDateTasks} for:item="taskData" for:index="index">
     <!-- <li key={expenseData.id} > -->
-        <article class="list-first-grey" key={taskData.id}>
+        <li class="slds-item" key={taskData.Id}>
             <div class="slds-grid">
                 <header class="slds-media slds-has-flexi-truncate">
                 <div class="slds-media__body">
@@ -185,10 +162,34 @@
                 </div>
                 </header>
             </div>
-            <div class="slds-p-left_small slds-p-bottom_xx-small" style="color:grey;font-size:14px">{taskData.Task_Remarks__c}</div>
-        </article>
+            <!-- <div class="slds-p-left_small slds-p-bottom_xx-small" style="color:grey;font-size:14px">{taskData.Task_Remarks__c}</div> -->
+            <lightning-layout pull-to-boundary="small"   vertical-align="center" horizontal-align="spread" >
+                <lightning-layout-item style="color:grey;font-size:14px" class="slds-p-left_small slds-p-bottom_xx-small"  padding="horizontal-small" flexibility="no grow">
+                    {taskData.Task_Remarks__c} 
+                </lightning-layout-item>
+                 <!-- Delete btn  to delete Record for the task -->
+                <lightning-layout-item padding="horizontal-small" flexibility="grow">
+                    <lightning-button-icon  icon-name="utility:delete"
+                                            alternative-text="Delete"
+                                            title="Delete"
+                                            name={taskData.Id}
+                                            data-id={index}
+                                            onclick={deleteTaskHandler}>
+                     </lightning-button-icon>
+                </lightning-layout-item>
+            </lightning-layout>
+        </li>
     <!-- </li> -->
 </template>
+</ul>
+</lightning-layout-item>
+</lightning-layout>
+<!-- End of RECORDS DISPLAY -->
+
+
+
+
+<!-- DATATABLE TO EDIT THE TASK RECORDS -->
 <template if:false={showTasks}>
     <div class="slds-scrollable_y">
         <lightning-datatable key-field="Id" data={recordsOfGetSelectedDateTasks} 
@@ -196,7 +197,8 @@
         </lightning-datatable>
     </div>
 </template>
-<div class="list-last"></div>
+<!--END OF DATATABLE TO EDIT THE TASK RECORDS -->
+
 
     </lightning-card>
 </template>

@@ -1,9 +1,13 @@
-import { LightningElement, track, wire, api } from "lwc";
-import getSelectedDateTasks from "@salesforce/apex/taskPlannerController.getSelectedDateTasks";
-import { createRecord } from "lightning/uiRecordApi";
-import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import { LightningElement, track, wire, api } from 'lwc';
+import getSelectedDateTasks from '@salesforce/apex/taskPlannerController.getSelectedDateTasks';
+import { createRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import { updateRecord } from 'lightning/uiRecordApi';
+import { deleteRecord } from 'lightning/uiRecordApi';
+
+
+
 
 export default class TaskPlanner extends LightningElement {
   @track currentDate = this.todaysDate();
@@ -252,6 +256,48 @@ accordianSection = '';
 
     }
 //
+
+//DELETE RECORD HANDLER
+/*
+    * @desc accepts delete input value and deletes it from the custom setting in the Org.
+    * @param event.
+    * @return nothing.
+    */   
+   deleteTaskHandler(event) {
+    console.log('Inside deleteTaskHandler() function');
+    console.log('event' + event);
+    console.log('event.target.name' + event.target.name);
+    let recordId = event.target.name;
+    deleteRecord(recordId)
+            .then(() => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Record Is  Deleted',
+                        variant: 'success',
+                    }),
+                );
+               // this.dataModifier = this.dataModifier + 1;
+               ++(this.dataModifier);
+            })
+            .catch(error => {
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error While Deleting record',
+                        message: error.message,
+                        variant: 'error',
+                    }),
+                );
+            });
+
+
+   
+
+     
+
+   
+  }
+
 
 
 

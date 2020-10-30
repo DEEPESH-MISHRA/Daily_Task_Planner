@@ -13,3 +13,12 @@
     border-bottom: 1px solid steelblue;
     padding-bottom: 1px;
 }
+.completed
+{
+    background-color: #c3f6c3;
+    text-decoration: line-through;
+}
+.pending
+{
+    background-color: #ffff9f;
+}

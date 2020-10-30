@@ -7,7 +7,8 @@ import { updateRecord } from 'lightning/uiRecordApi';
 import { deleteRecord } from 'lightning/uiRecordApi';
 
 
-
+// const STATUS_PENDING_CLASS = "slds-item pending";
+// const STATUS_COMPLETE_CLASS = "slds-item completed";
 
 export default class TaskPlanner extends LightningElement {
   @track currentDate = this.todaysDate();
@@ -20,12 +21,13 @@ export default class TaskPlanner extends LightningElement {
   //trackable variable to getSelectedDateTasks() method whenever new record is inserted or updated.
   @track dataModifier = 0;  
   @track draftValues = [];
+  @track recordsStatus =false;
 
   columns = [
-    { label: 'Task Name', fieldName: 'Task_Name__c', type: 'text', editable: 'true'  },   
-    { label: 'Task Duration', fieldName: 'Task_Duration__c', type: 'number', editable: 'true' },
-    { label: 'Task Remarks', fieldName: 'Task_Remarks__c', type: 'text', editable: 'true' },
-    { label: 'Task Complete', fieldName: 'Task_Complete__c', type: 'boolean', editable: 'true' }
+    { label: 'Name', fieldName: 'Task_Name__c', type: 'text', editable: 'true'  },   
+    { label: 'Hrs', fieldName: 'Task_Duration__c', type: 'number', editable: 'true', fixedWidth: 80, hideDefaultActions: true },
+    { label: 'Remarks', fieldName: 'Task_Remarks__c', type: 'text', editable: 'true' },
+    { label: 'Status', fieldName: 'Task_Complete__c', type: 'boolean', editable: 'true',hideDefaultActions: true,fixedWidth: 80 }
 ];
 
   /*
@@ -174,6 +176,12 @@ export default class TaskPlanner extends LightningElement {
    });
 }
 
+// get statusClass() {
+//   // return(this.boat.Id == this.selectedBoatId)
+//   //   ? TILE_WRAPPER_SELECTED_CLASS
+//   //   : TILE_WRAPPER_UNSELECTED_CLASS;
+// }
+
   /*
    * @desc createTaskRecord function to create  record in the Custom Task_Record__c Object.
    * @param event.
@@ -235,6 +243,14 @@ export default class TaskPlanner extends LightningElement {
     if (data) {
       //assigns list of string containing selected date records, returned from apex class funtion to dataOfGetSelectedDateExpenses variable.
       this.recordsOfGetSelectedDateTasks = data;
+      if (Array.isArray(this.recordsOfGetSelectedDateTasks) && this.recordsOfGetSelectedDateTasks.length) 
+               {
+                this.recordsStatus = true; 
+               } 
+            else {
+                this.recordsStatus = false; 
+            }
+      console.log("this.recordsStatus :" + this.recordsStatus);
       console.log('recordsOfGetSelectedDateTasks:' + JSON.stringify(this.recordsOfGetSelectedDateTasks, null, '\t'));
       
     } else if (error) {
@@ -273,7 +289,7 @@ accordianSection = '';
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Success',
-                        message: 'Record Is  Deleted',
+                        message: 'Task deleted Successfully',
                         variant: 'success',
                     }),
                 );
@@ -283,7 +299,7 @@ accordianSection = '';
             .catch(error => {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Error While Deleting record',
+                        title: 'Error While Deleting Task',
                         message: error.message,
                         variant: 'error',
                     }),
